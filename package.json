@@ -1,6 +1,6 @@
 {
   "name": "bubo",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "HTML form validation made simple",
   "homepage": "https://github.com/epicagency/bubo",
   "main": "lib/bubo.js",
