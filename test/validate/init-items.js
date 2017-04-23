@@ -6,8 +6,17 @@ test.beforeEach((t) => {
   t.context.form = document.createElement('form');
 });
 
+// No form
+test('noform', (t) => {
+  const div = document.createElement('form');
+
+  const bubo = new Validate(div);
+
+  t.is(bubo.items.length, 0);
+});
+
 // Nothing to validate
-test('init:items:none', (t) => {
+test('none', (t) => {
   t.context.form.appendChild(createElement('input'));
 
   const bubo = new Validate(t.context.form);
@@ -16,7 +25,7 @@ test('init:items:none', (t) => {
 });
 
 // Required attribute
-test('init:items:required', (t) => {
+test('required', (t) => {
   t.context.form.appendChild(createElement('input', {required: ''}));
 
   const bubo = new Validate(t.context.form);
@@ -25,7 +34,7 @@ test('init:items:required', (t) => {
 });
 
 // Rule type
-test('init:items:rule:type', (t) => {
+test('rule:type', (t) => {
   t.context.form.appendChild(createElement('input', {type: 'email'}));
 
   const bubo = new Validate(t.context.form);
@@ -34,7 +43,7 @@ test('init:items:rule:type', (t) => {
 });
 
 // Rule attribute
-test('init:items:rule:attribute', (t) => {
+test('rule:attribute', (t) => {
   t.context.form.appendChild(createElement('input', {minLength: '5'}));
 
   const bubo = new Validate(t.context.form);
@@ -43,7 +52,7 @@ test('init:items:rule:attribute', (t) => {
 });
 
 // Required + rules (type/attribute)
-test('init:items:required+rules', (t) => {
+test('required+rules', (t) => {
   t.context.form.appendChild(createElement('input', {
     required: '',
     type: 'email',
@@ -57,7 +66,7 @@ test('init:items:required+rules', (t) => {
 
 
 // Multiple items
-test('init:items:multiple', (t) => {
+test('multiple', (t) => {
   t.context.form.appendChild(createElement('input'));
   t.context.form.appendChild(createElement('input', {required: ''}));
   t.context.form.appendChild(createElement('input', {type: 'email'}));
@@ -70,7 +79,7 @@ test('init:items:multiple', (t) => {
 });
 
 // Group (same name attribute)
-test('init:items:group', (t) => {
+test('group', (t) => {
   t.context.form.appendChild(createElement('input', {
     name: 'same',
     required: '',

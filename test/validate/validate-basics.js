@@ -32,17 +32,15 @@ test('validate:required', (t) => {
   const bubo = new Validate(t.context.form);
 
   bubo.validate();
-
   t.is(bubo.errors.test.length, 1);
 
   item.value = 'aa';
   bubo.validate();
-
   t.is(bubo.errors.test, undefined);
 });
 
 // Rule validation (type)
-test('validate:rule:type', (t) => {
+test('type', (t) => {
   const item = createElement('input', {
     name: 'test',
     type: 'email',
@@ -63,7 +61,7 @@ test('validate:rule:type', (t) => {
 
 
 // Rule validation (attribute)
-test('validate:rule:attribute', (t) => {
+test('attribute', (t) => {
   const item = createElement('input', {
     name: 'test',
     minlength: '5',
@@ -80,4 +78,23 @@ test('validate:rule:attribute', (t) => {
   item.value = 'aaaaa';
   bubo.validate();
   t.is(bubo.errors.test, undefined);
+});
+
+
+// Multiple validation
+test('validate:multiple', (t) => {
+  const item = createElement('input', {
+    name: 'test',
+    type: 'email',
+    minlength: '5',
+  });
+
+  t.context.form.appendChild(item);
+
+  const bubo = new Validate(t.context.form);
+
+  item.value = 'aa';
+  bubo.validate();
+  // eslint-disable-next-line no-magic-numbers
+  t.is(bubo.errors.test.length, 2);
 });

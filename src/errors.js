@@ -5,7 +5,7 @@ const msg = {
   en: {
     defaultLabel: 'This field',
     success: 'The form is completed correctly.',
-    errors: 'Please correct errors.',
+    error: 'Please correct errors.',
     required: '${label} is required.',
     email: '${label} is not a valid email.',
     url: '${label} is not a valid URL.',
@@ -21,6 +21,18 @@ const msg = {
 /* eslint-enable no-template-curly-in-string, max-len */
 
 /**
+ * Get global text message depending on status
+ *
+ * @export
+ * @param {string} status status
+ * @param {string} [loc=en] locale
+ * @returns {string} text message
+ */
+export function getText(status, loc = 'en') {
+  return msg[loc][status];
+}
+
+/**
  * Get error message
  *
  * @export
@@ -30,7 +42,7 @@ const msg = {
  * @param {any} [value=null] dynamic value
  * @returns {string} error message
  */
-export function errorMsg(key, label = null, loc = 'en', ...values) {
+export function getError(key, label = null, loc = 'en', ...values) {
   // !DEV add check available locale
   const strings = {
     label: label || msg[loc].defaultLabel,

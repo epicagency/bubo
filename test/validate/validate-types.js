@@ -7,7 +7,7 @@ test.beforeEach((t) => {
 });
 
 // Rule email
-test('validate:type:email', (t) => {
+test('email', (t) => {
   const item = createElement('input', {
     name: 'test',
     type: 'email',
@@ -31,7 +31,7 @@ test('validate:type:email', (t) => {
 });
 
 // Rule url
-test('validate:type:url', (t) => {
+test('url', (t) => {
   const item = createElement('input', {
     name: 'test',
     type: 'url',
@@ -59,7 +59,7 @@ test('validate:type:url', (t) => {
 });
 
 // Rule number
-test('validate:type:number', (t) => {
+test('number', (t) => {
   const item = createElement('input', {
     name: 'test',
     type: 'number',

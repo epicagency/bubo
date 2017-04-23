@@ -26,7 +26,7 @@ test('validate:required', (t) => {
 });
 
 // Required checkbox validation
-test('validate:required:checkbox', (t) => {
+test('checkbox', (t) => {
   const item = createElement('input', {
     name: 'test',
     type: 'checkbox',
@@ -46,7 +46,7 @@ test('validate:required:checkbox', (t) => {
 });
 
 // Required radio validation
-test('validate:required:radio', (t) => {
+test('radio', (t) => {
   const item = createElement('input', {
     name: 'test',
     type: 'radio',
@@ -66,7 +66,7 @@ test('validate:required:radio', (t) => {
 });
 
 // Required select validation
-test('validate:required:select', (t) => {
+test('select', (t) => {
   const item = createElement('select', {
     name: 'test',
     required: '',

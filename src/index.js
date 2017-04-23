@@ -7,9 +7,13 @@ import {
 
 import {
   shouldValidate,
+  hasRule,
   getRuleByName,
 } from './utils';
-import { errorMsg } from './errors';
+import {
+  getText,
+  getError,
+} from './errors';
 
 export class Validate {
   constructor(form, locale = 'en') {
@@ -60,7 +64,7 @@ export class Validate {
 
     // !DEV
     // empty form ?
-    if (!els) {
+    if (els.length === 0) {
       return;
     }
 
@@ -88,6 +92,7 @@ export class Validate {
    */
   validate() {
     this._results.status = 'success';
+    this._results.text = getText(this._results.status, this._locale);
     this._results.errors = {};
 
     this._items.forEach((item) => {
@@ -108,7 +113,7 @@ export class Validate {
 
     if (Validate._hasErrors(this._results)) {
       this._results.status = 'error';
-      this._results.text = 'Veuillez corriger les erreurs';
+      this._results.text = getText(this._results.status, this._locale);
     }
   }
 
@@ -129,7 +134,7 @@ export class Validate {
       if (!item.el.checked) {
         this._addError(
           item,
-          errorMsg('required', label, this._locale)
+          getError('required', label, this._locale)
           // `${label} is required`
         );
       }
@@ -140,7 +145,7 @@ export class Validate {
     if (isEmpty(value)) {
       this._addError(
         item,
-        errorMsg('required', label, this._locale)
+        getError('required', label, this._locale)
         // `${label} is required`
       );
     }
@@ -154,7 +159,7 @@ export class Validate {
    *    email, url, number
    * Todo:
    *    date, time, tel, color, datetime-local, pattern, min, max,
-   *    minMax, minLength, maxLength, minMaxLength, step
+   *    minmax, minlength, maxlength, minmaxlength, step
    *
    * @param {Object} item Bubo item
    * @param {Object} rule validation rule
@@ -166,12 +171,13 @@ export class Validate {
   _isValid(item, rule, value) {
     const label = item.label || item.name;
 
+    // eslint-disable-next-line default-case
     switch (rule.name) {
       case 'email':
         if (!isEmail(value)) {
           this._addError(
             item,
-            errorMsg('email', label, this._locale)
+            getError('email', label, this._locale)
           );
         }
         break;
@@ -180,7 +186,7 @@ export class Validate {
         if (!isUrl(value)) {
           this._addError(
             item,
-            errorMsg('url', label, this._locale)
+            getError('url', label, this._locale)
           );
         }
         break;
@@ -189,7 +195,7 @@ export class Validate {
         if (!isNumber(parseFloat(value))) {
           this._addError(
             item,
-            errorMsg('number', label, this._locale)
+            getError('number', label, this._locale)
           );
         }
         break;
@@ -201,11 +207,13 @@ export class Validate {
         //   item.type === 'date' ||
         //   item.type === 'time'
         // ) {
-        if (item.type === 'number') {
-          if (parseFloat(value) < rule.value) {
+        if (item.type === 'number' && !hasRule(item, 'minmax')) {
+          const number = parseFloat(value);
+
+          if (number < rule.value) {
             this._addError(
               item,
-              errorMsg('min', label, this._locale, rule.value)
+              getError('min', label, this._locale, rule.value)
             );
           }
         }
@@ -218,11 +226,13 @@ export class Validate {
         //   item.type === 'date' ||
         //   item.type === 'time'
         // ) {
-        if (item.type === 'number') {
-          if (parseFloat(value) > rule.value) {
+        if (item.type === 'number' && !hasRule(item, 'minmax')) {
+          const number = parseFloat(value);
+
+          if (number > rule.value) {
             this._addError(
               item,
-              errorMsg('max', label, this._locale, rule.value)
+              getError('max', label, this._locale, rule.value)
             );
           }
         }
@@ -238,47 +248,48 @@ export class Validate {
         if (item.type === 'number') {
           const min = getRuleByName(item, 'min').value;
           const max = getRuleByName(item, 'max').value;
+          const number = parseFloat(value);
 
-          if (parseFloat(value) < min || parseFloat(value) > max) {
+          if (number < min || number > max) {
             this._addError(
               item,
-              errorMsg('minmax', label, this._locale, min, max)
+              getError('minmax', label, this._locale, min, max)
             );
           }
         }
         break;
 
       case 'minlength':
-        if (
+        if ((
           item.type === 'text' ||
           item.type === 'email' ||
           item.type === 'search' ||
           item.type === 'password' ||
           item.type === 'tel' ||
           item.type === 'url'
-        ) {
+        ) && !hasRule(item, 'minmaxlength')) {
           if (value.length < rule.value) {
             this._addError(
               item,
-              errorMsg('minlength', label, this._locale, rule.value)
+              getError('minlength', label, this._locale, rule.value)
             );
           }
         }
         break;
 
       case 'maxlength':
-        if (
+        if ((
           item.type === 'text' ||
           item.type === 'email' ||
           item.type === 'search' ||
           item.type === 'password' ||
           item.type === 'tel' ||
           item.type === 'url'
-        ) {
+        ) && !hasRule(item, 'minmaxlength')) {
           if (value.length > rule.value) {
             this._addError(
               item,
-              errorMsg('maxlength', label, this._locale, rule.value)
+              getError('maxlength', label, this._locale, rule.value)
             );
           }
         }
@@ -293,17 +304,19 @@ export class Validate {
           item.type === 'tel' ||
           item.type === 'url'
         ) {
-          if (value.length < rule.value || value.length > rule.value) {
+          const minlength = getRuleByName(item, 'minlength').value;
+          const maxlength = getRuleByName(item, 'maxlength').value;
+
+          if (value.length < minlength || value.length > maxlength) {
             this._addError(
               item,
-              errorMsg('minmaxlength', label, this._locale, rule.value)
+              getError('minmaxlength', label, this._locale, rule.value)
             );
           }
         }
         break;
 
-      default:
-        break;
+        // No default
     }
   }
 
@@ -349,17 +362,34 @@ export class Validate {
    * @memberOf Validate
    */
   _bind() {
-    this._form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      this.validate();
-      console.info(this.errors);
-    });
+    this.onSubmit = this._submit.bind(this);
+    this._form.addEventListener('submit', this.onSubmit);
+  }
+
+  /**
+   * Bind events
+   *
+   * Available events:
+   *    submit
+   *
+   * @returns {undefined}
+   *
+   * @memberOf Validate
+   */
+  _unbind() {
+    this._form.removeEventListener('submit', this.onSubmit);
+  }
+
+  _submit(e) {
+    e.preventDefault();
+    this.validate();
+    console.info(this.errors);
   }
 
   destroy() {
-    // !DEV
-    // this.unbind()
-    console.info(this);
+    this._unbind();
+    delete this._items;
+    delete this._results;
   }
 }
 

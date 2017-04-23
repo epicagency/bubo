@@ -66,7 +66,7 @@ function hasRules(el) {
 
   // If min/maxLength -> special rule
   if (el.hasAttribute('minlength') && el.hasAttribute('maxlength')) {
-    rules.push(addRule('minmaxLength'));
+    rules.push(addRule('minmaxlength'));
   }
 
   if (rules.length > 0) {
@@ -77,7 +77,7 @@ function hasRules(el) {
 }
 
 /**
-* Create e new "rule" object
+* Create a new "rule" object
 *
 * @param {string} name name of the rule
 * @param {any} [value=null] value for validation
@@ -94,6 +94,20 @@ function addRule(name, value = null) {
 }
 
 /**
+ * Check if item has rule
+ *
+ * @export
+ * @param {Object} item Budo item
+ * @param {string} name rule name
+ * @returns {boolean} true/false
+ */
+export function hasRule(item, name) {
+  const matches = item.rules.filter((rule) => rule.name === name);
+
+  return matches.length === 1;
+}
+
+/**
  * Get item rule by rule name
  *
  * @export
@@ -102,7 +116,7 @@ function addRule(name, value = null) {
  * @returns {Object} rule
  */
 export function getRuleByName(item, name) {
-  return item.rules.filter((rule) => rule.name === name);
+  return item.rules.filter((rule) => rule.name === name)[0];
 }
 
 /**
