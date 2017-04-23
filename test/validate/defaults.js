@@ -1,22 +1,43 @@
 import test from 'ava';
-import { Validate } from '../../src/index.js';
+import Validate from '../../src';
 import { createElement } from '../helpers/create-element';
 
 test.beforeEach((t) => {
   t.context.form = document.createElement('form');
 });
 
-// No form
-test('noform', (t) => {
-  const div = document.createElement('form');
+test('Form is a HTMLFormElement', (t) => {
+  const bubo = new Validate(t.context.form);
 
-  const bubo = new Validate(div);
+  t.truthy(bubo._form instanceof window.HTMLFormElement);
 
-  t.is(bubo.items.length, 0);
+  const div = document.createElement('div');
+  const error = t.throws(() => {
+    new Validate(div); // eslint-disable-line
+  }, Error);
+
+  t.is(error.message, '🦉 form parameter should be a HTMLFormElement!');
 });
 
-// Nothing to validate
-test('none', (t) => {
+test('Form has novalidate attribute', (t) => {
+  new Validate(t.context.form); // eslint-disable-line
+  t.is(t.context.form.hasAttribute('novalidate'), true);
+});
+
+test('Validate has default locale', (t) => {
+  const bubo = new Validate(t.context.form);
+
+  t.is(bubo.locale, 'en');
+});
+
+test('Validate can change locale', (t) => {
+  const bubo = new Validate(t.context.form);
+
+  bubo.locale = 'fr';
+  t.is(bubo.locale, 'fr');
+});
+
+test('Nothing to validate', (t) => {
   t.context.form.appendChild(createElement('input'));
 
   const bubo = new Validate(t.context.form);
@@ -24,8 +45,7 @@ test('none', (t) => {
   t.is(bubo.items.length, 0);
 });
 
-// Required attribute
-test('required', (t) => {
+test('An element is required', (t) => {
   t.context.form.appendChild(createElement('input', {required: ''}));
 
   const bubo = new Validate(t.context.form);
@@ -33,8 +53,7 @@ test('required', (t) => {
   t.is(bubo.items.length, 1);
 });
 
-// Rule type
-test('rule:type', (t) => {
+test('An element has a type to validate', (t) => {
   t.context.form.appendChild(createElement('input', {type: 'email'}));
 
   const bubo = new Validate(t.context.form);
@@ -42,8 +61,7 @@ test('rule:type', (t) => {
   t.is(bubo.items.length, 1);
 });
 
-// Rule attribute
-test('rule:attribute', (t) => {
+test('An element has an attribute to validate', (t) => {
   t.context.form.appendChild(createElement('input', {minLength: '5'}));
 
   const bubo = new Validate(t.context.form);
@@ -51,8 +69,7 @@ test('rule:attribute', (t) => {
   t.is(bubo.items.length, 1);
 });
 
-// Required + rules (type/attribute)
-test('required+rules', (t) => {
+test('An element is required with validations', (t) => {
   t.context.form.appendChild(createElement('input', {
     required: '',
     type: 'email',
@@ -64,9 +81,7 @@ test('required+rules', (t) => {
   t.is(bubo.items.length, 1);
 });
 
-
-// Multiple items
-test('multiple', (t) => {
+test('Many elements required / to be validated', (t) => {
   t.context.form.appendChild(createElement('input'));
   t.context.form.appendChild(createElement('input', {required: ''}));
   t.context.form.appendChild(createElement('input', {type: 'email'}));
@@ -78,8 +93,7 @@ test('multiple', (t) => {
   t.is(bubo.items.length, 3);
 });
 
-// Group (same name attribute)
-test('group', (t) => {
+test('There is a group required (same name)', (t) => {
   t.context.form.appendChild(createElement('input', {
     name: 'same',
     required: '',

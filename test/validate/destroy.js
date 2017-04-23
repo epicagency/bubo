@@ -1,12 +1,11 @@
 import test from 'ava';
-import { Validate } from '../../src/index.js';
+import Validate from '../../src/index.js';
 
 test.beforeEach((t) => {
   t.context.form = document.createElement('form');
 });
 
-// Destroy
-test('destroy', (t) => {
+test('Bubo properly destroyed', (t) => {
   const bubo = new Validate(t.context.form);
 
   bubo.destroy();

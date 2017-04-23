@@ -63,6 +63,10 @@
     "is_js": "^0.9.0"
   },
   "ava": {
+    "files": [
+      "test/**/*.js",
+      "!**/__snapshots__/*.js.snap"
+    ],
     "require": [
       "babel-register",
       "./test/helpers/setup-browser-env.js"

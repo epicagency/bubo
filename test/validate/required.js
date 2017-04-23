@@ -1,27 +1,12 @@
 import test from 'ava';
-import { Validate } from '../../src/index.js';
+import Validate from '../../src/index.js';
 import { createElement } from '../helpers/create-element';
 
 test.beforeEach((t) => {
   t.context.form = document.createElement('form');
 });
 
-// No validation
-test('validate:novalidation', (t) => {
-  const item = createElement('input', {
-    name: 'test',
-    required: '',
-  });
-
-  t.context.form.appendChild(item);
-
-  const bubo = new Validate(t.context.form);
-
-  t.is(bubo.errors, null);
-});
-
-// Required validation
-test('validate:required', (t) => {
+test('Text is required', (t) => {
   const item = createElement('input', {
     name: 'test',
     required: '',
@@ -39,62 +24,59 @@ test('validate:required', (t) => {
   t.is(bubo.errors.test, undefined);
 });
 
-// Rule validation (type)
-test('type', (t) => {
+test('Checkbox is required', (t) => {
   const item = createElement('input', {
     name: 'test',
-    type: 'email',
+    type: 'checkbox',
+    required: '',
   });
 
   t.context.form.appendChild(item);
 
   const bubo = new Validate(t.context.form);
 
-  item.value = 'aa';
   bubo.validate();
   t.is(bubo.errors.test.length, 1);
 
-  item.value = 'aa@aa.aa';
+  item.setAttribute('checked', '');
   bubo.validate();
   t.is(bubo.errors.test, undefined);
 });
 
-
-// Rule validation (attribute)
-test('attribute', (t) => {
+test('Radio button is required', (t) => {
   const item = createElement('input', {
     name: 'test',
-    minlength: '5',
+    type: 'radio',
+    required: '',
   });
 
   t.context.form.appendChild(item);
 
   const bubo = new Validate(t.context.form);
 
-  item.value = 'aa';
   bubo.validate();
   t.is(bubo.errors.test.length, 1);
 
-  item.value = 'aaaaa';
+  item.setAttribute('checked', '');
   bubo.validate();
   t.is(bubo.errors.test, undefined);
 });
 
-
-// Multiple validation
-test('validate:multiple', (t) => {
-  const item = createElement('input', {
+test('Select is required', (t) => {
+  const item = createElement('select', {
     name: 'test',
-    type: 'email',
-    minlength: '5',
+    required: '',
   });
+  const opt = item.querySelector('option:last-of-type');
 
   t.context.form.appendChild(item);
 
   const bubo = new Validate(t.context.form);
 
-  item.value = 'aa';
   bubo.validate();
-  // eslint-disable-next-line no-magic-numbers
-  t.is(bubo.errors.test.length, 2);
+  t.is(bubo.errors.test.length, 1);
+
+  opt.setAttribute('selected', '');
+  bubo.validate();
+  t.is(bubo.errors.test, undefined);
 });

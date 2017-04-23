@@ -1,13 +1,12 @@
 import test from 'ava';
-import { Validate } from '../../src/index.js';
+import Validate from '../../src/index.js';
 import { createElement } from '../helpers/create-element';
 
 test.beforeEach((t) => {
   t.context.form = document.createElement('form');
 });
 
-// Rule min
-test('min', (t) => {
+test('Min is valid', (t) => {
   const item = createElement('input', {
     name: 'test',
     type: 'number',
@@ -33,12 +32,13 @@ test('min', (t) => {
   });
 
   wrong.value = '1';
+  t.context.form.appendChild(wrong);
+  bubo.refresh();
   bubo.validate();
   t.is(bubo.errors.wrong, undefined);
 });
 
-// Rule max
-test('max', (t) => {
+test('Max is valid', (t) => {
   const item = createElement('input', {
     name: 'test',
     type: 'number',
@@ -64,12 +64,13 @@ test('max', (t) => {
   });
 
   wrong.value = '4';
+  t.context.form.appendChild(wrong);
+  bubo.refresh();
   bubo.validate();
   t.is(bubo.errors.wrong, undefined);
 });
 
-// Rule minmax
-test('minmax', (t) => {
+test('Min + max is valid', (t) => {
   const item = createElement('input', {
     name: 'test',
     type: 'number',
@@ -101,6 +102,8 @@ test('minmax', (t) => {
   bubo.validate();
   t.is(bubo.errors.test, undefined);
 
+  t.context.form.removeChild(item);
+
   // Wrong type
   const wrong = createElement('input', {
     name: 'wrong',
@@ -109,28 +112,62 @@ test('minmax', (t) => {
   });
 
   wrong.value = '1';
+  t.context.form.appendChild(wrong);
+  bubo.refresh();
   bubo.validate();
   t.is(bubo.errors.wrong, undefined);
 });
 
-// Rule minlength
-test('minlength', (t) => {
-  const item = createElement('input', {
-    name: 'test',
-    minlength: '2',
-  });
+test('Minlength is valid', (t) => {
+  const els = [
+    {
+      type: 'text',
+      value: 'aaaaaaaaaaaa',
+    },
+    {
+      type: 'email',
+      value: 'aaaa@aaaa.aa',
+    },
+    {
+      type: 'search',
+      value: 'aaaaaaaaaaaa',
+    },
+    {
+      type: 'password',
+      value: 'aaaaaaaaaaaa',
+    },
+    {
+      type: 'tel',
+      value: 'aaaaaaaaaaaa',
+    },
+    {
+      type: 'url',
+      value: 'http://aa.aa',
+    },
+  ];
+  const items = [];
 
-  t.context.form.appendChild(item);
+  els.forEach((el) => {
+    const item = createElement('input', {
+      type: el.type,
+      value: el.value,
+      minlength: '12',
+    });
+
+    items.push(item);
+    t.context.form.appendChild(item);
+  });
 
   const bubo = new Validate(t.context.form);
 
-  item.value = 'a';
-  bubo.validate();
-  t.is(bubo.errors.test.length, 1);
+  items.forEach((item) => {
+    bubo.validate();
+    t.is(bubo.errors[item.getAttribute('name')], undefined);
 
-  item.value = 'aa';
-  bubo.validate();
-  t.is(bubo.errors.test, undefined);
+    item.value = 'a';
+    bubo.validate();
+    t.truthy(bubo.errors[item.getAttribute('name')].length >= 1);
+  });
 
   // Wrong type
   const wrong = createElement('input', {
@@ -140,28 +177,62 @@ test('minlength', (t) => {
   });
 
   wrong.value = '1';
+  t.context.form.appendChild(wrong);
+  bubo.refresh();
   bubo.validate();
   t.is(bubo.errors.wrong, undefined);
 });
 
-// Rule maxlength
-test('maxlength', (t) => {
-  const item = createElement('input', {
-    name: 'test',
-    maxlength: '3',
-  });
+test('Maxlength is valid', (t) => {
+  const els = [
+    {
+      type: 'text',
+      value: 'aaaaaaaaaaaa',
+    },
+    {
+      type: 'email',
+      value: 'aaaa@aaaa.aa',
+    },
+    {
+      type: 'search',
+      value: 'aaaaaaaaaaaa',
+    },
+    {
+      type: 'password',
+      value: 'aaaaaaaaaaaa',
+    },
+    {
+      type: 'tel',
+      value: 'aaaaaaaaaaaa',
+    },
+    {
+      type: 'url',
+      value: 'http://aa.aa',
+    },
+  ];
+  const items = [];
 
-  t.context.form.appendChild(item);
+  els.forEach((el) => {
+    const item = createElement('input', {
+      type: el.type,
+      value: el.value,
+      maxlength: '12',
+    });
+
+    items.push(item);
+    t.context.form.appendChild(item);
+  });
 
   const bubo = new Validate(t.context.form);
 
-  item.value = 'aaaa';
-  bubo.validate();
-  t.is(bubo.errors.test.length, 1);
+  items.forEach((item) => {
+    bubo.validate();
+    t.is(bubo.errors[item.getAttribute('name')], undefined);
 
-  item.value = 'aaa';
-  bubo.validate();
-  t.is(bubo.errors.test, undefined);
+    item.value = 'aaaaaaaaaaaaaaa';
+    bubo.validate();
+    t.truthy(bubo.errors[item.getAttribute('name')].length >= 1);
+  });
 
   // Wrong type
   const wrong = createElement('input', {
@@ -171,12 +242,13 @@ test('maxlength', (t) => {
   });
 
   wrong.value = '1111';
+  t.context.form.appendChild(wrong);
+  bubo.refresh();
   bubo.validate();
   t.is(bubo.errors.wrong, undefined);
 });
 
-// Rule minmaxlength
-test('minmaxlength', (t) => {
+test('Minlength + maxlength is valid', (t) => {
   const item = createElement('input', {
     name: 'test',
     minlength: '2',
@@ -212,6 +284,8 @@ test('minmaxlength', (t) => {
   });
 
   wrong.value = '1';
+  t.context.form.appendChild(wrong);
+  bubo.refresh();
   bubo.validate();
   t.is(bubo.errors.wrong, undefined);
 });

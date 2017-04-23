@@ -1,0 +1,7 @@
+class Send {
+  constructor() {
+    console.info('Send');
+  }
+}
+
+export default Send;

@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Error text 1`] = `"Please correct errors."`;
+
+exports[`Success text 1`] = `"The form is completed correctly."`;

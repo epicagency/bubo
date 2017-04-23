@@ -1,0 +1,7 @@
+class Ui {
+  constructor() {
+    console.info('Ui');
+  }
+}
+
+export default Ui;

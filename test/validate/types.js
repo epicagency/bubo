@@ -1,86 +1,88 @@
 import test from 'ava';
-import { Validate } from '../../src/index.js';
+import Validate from '../../src/index.js';
 import { createElement } from '../helpers/create-element';
 
 test.beforeEach((t) => {
   t.context.form = document.createElement('form');
 });
 
-// Required validation
-test('validate:required', (t) => {
+test('Email is valid', (t) => {
   const item = createElement('input', {
     name: 'test',
-    required: '',
+    type: 'email',
   });
 
   t.context.form.appendChild(item);
 
   const bubo = new Validate(t.context.form);
-
-  bubo.validate();
-  t.is(bubo.errors.test.length, 1);
 
   item.value = 'aa';
   bubo.validate();
+  t.is(bubo.errors.test.length, 1);
+
+  item.value = 'aa@aa';
+  bubo.validate();
+  t.is(bubo.errors.test.length, 1);
+
+  item.value = 'aa@aa.aa';
+  bubo.validate();
   t.is(bubo.errors.test, undefined);
 });
 
-// Required checkbox validation
-test('checkbox', (t) => {
+test('URL is valid', (t) => {
   const item = createElement('input', {
     name: 'test',
-    type: 'checkbox',
-    required: '',
+    type: 'url',
   });
 
   t.context.form.appendChild(item);
 
   const bubo = new Validate(t.context.form);
 
+  item.value = 'aa';
   bubo.validate();
   t.is(bubo.errors.test.length, 1);
 
-  item.setAttribute('checked', '');
+  item.value = 'aa.aa';
+  bubo.validate();
+  t.is(bubo.errors.test, undefined);
+
+  item.value = 'http://aa.aa';
+  bubo.validate();
+  t.is(bubo.errors.test, undefined);
+
+  item.value = 'https://aa.aa';
   bubo.validate();
   t.is(bubo.errors.test, undefined);
 });
 
-// Required radio validation
-test('radio', (t) => {
+test('Number is valid', (t) => {
   const item = createElement('input', {
     name: 'test',
-    type: 'radio',
-    required: '',
+    type: 'number',
   });
 
   t.context.form.appendChild(item);
 
   const bubo = new Validate(t.context.form);
 
+  item.value = 'a';
   bubo.validate();
   t.is(bubo.errors.test.length, 1);
 
-  item.setAttribute('checked', '');
+  item.value = '-1';
   bubo.validate();
   t.is(bubo.errors.test, undefined);
-});
 
-// Required select validation
-test('select', (t) => {
-  const item = createElement('select', {
-    name: 'test',
-    required: '',
-  });
-  const opt = item.querySelector('option:last-of-type');
-
-  t.context.form.appendChild(item);
-
-  const bubo = new Validate(t.context.form);
-
+  item.value = '0';
   bubo.validate();
-  t.is(bubo.errors.test.length, 1);
+  t.is(bubo.errors.test, undefined);
 
-  opt.setAttribute('selected', '');
+  item.value = '1';
+  bubo.validate();
+  t.is(bubo.errors.test, undefined);
+
+  item.value = '1.11';
   bubo.validate();
   t.is(bubo.errors.test, undefined);
 });

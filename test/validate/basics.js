@@ -1,13 +1,43 @@
 import test from 'ava';
-import { Validate } from '../../src/index.js';
+import Validate from '../../src/index.js';
 import { createElement } from '../helpers/create-element';
 
 test.beforeEach((t) => {
   t.context.form = document.createElement('form');
 });
 
-// Rule email
-test('email', (t) => {
+test('Init with no novalidation', (t) => {
+  const item = createElement('input', {
+    name: 'test',
+    required: '',
+  });
+
+  t.context.form.appendChild(item);
+
+  const bubo = new Validate(t.context.form);
+
+  t.is(bubo.errors, null);
+});
+
+test('Required validation', (t) => {
+  const item = createElement('input', {
+    name: 'test',
+    required: '',
+  });
+
+  t.context.form.appendChild(item);
+
+  const bubo = new Validate(t.context.form);
+
+  bubo.validate();
+  t.is(bubo.errors.test.length, 1);
+
+  item.value = 'aa';
+  bubo.validate();
+  t.is(bubo.errors.test, undefined);
+});
+
+test('Type validation', (t) => {
   const item = createElement('input', {
     name: 'test',
     type: 'email',
@@ -21,20 +51,16 @@ test('email', (t) => {
   bubo.validate();
   t.is(bubo.errors.test.length, 1);
 
-  item.value = 'aa@aa';
-  bubo.validate();
-  t.is(bubo.errors.test.length, 1);
-
   item.value = 'aa@aa.aa';
   bubo.validate();
   t.is(bubo.errors.test, undefined);
 });
 
-// Rule url
-test('url', (t) => {
+
+test('Attribute validation', (t) => {
   const item = createElement('input', {
     name: 'test',
-    type: 'url',
+    minlength: '5',
   });
 
   t.context.form.appendChild(item);
@@ -45,47 +71,24 @@ test('url', (t) => {
   bubo.validate();
   t.is(bubo.errors.test.length, 1);
 
-  item.value = 'aa.aa';
-  bubo.validate();
-  t.is(bubo.errors.test, undefined);
-
-  item.value = 'http://aa.aa';
-  bubo.validate();
-  t.is(bubo.errors.test, undefined);
-
-  item.value = 'https://aa.aa';
+  item.value = 'aaaaa';
   bubo.validate();
   t.is(bubo.errors.test, undefined);
 });
 
-// Rule number
-test('number', (t) => {
+test('Required, type and attribute validation', (t) => {
   const item = createElement('input', {
     name: 'test',
-    type: 'number',
+    type: 'email',
+    minlength: '5',
   });
 
   t.context.form.appendChild(item);
 
   const bubo = new Validate(t.context.form);
 
-  item.value = 'a';
+  item.value = 'aa';
   bubo.validate();
-  t.is(bubo.errors.test.length, 1);
-
-  item.value = '-1';
-  bubo.validate();
-  t.is(bubo.errors.test, undefined);
-
-  item.value = '0';
-  bubo.validate();
-  t.is(bubo.errors.test, undefined);
-
-  item.value = '1';
-  bubo.validate();
-  t.is(bubo.errors.test, undefined);
-
-  item.value = '1.11';
-  bubo.validate();
-  t.is(bubo.errors.test, undefined);
+  // eslint-disable-next-line no-magic-numbers
+  t.is(bubo.errors.test.length, 2);
 });
