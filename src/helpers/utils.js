@@ -19,13 +19,13 @@ function hasRules(el) {
 
   // Based on type attribute
   const types = [
-    'color',
-    'date',
-    'datetime-local',
+    // 'color',
+    // 'date',
+    // 'datetime-local',
     'email',
     'number',
-    'tel',
-    'time',
+    // 'tel',
+    // 'time',
     'url',
   ];
 
@@ -43,8 +43,8 @@ function hasRules(el) {
     'minlength',
     'max',
     'maxlength',
-    'pattern',
-    'step',
+    // 'pattern',
+    // 'step',
   ];
 
   attributes.forEach((attr) => {

@@ -188,14 +188,10 @@ export class Validate {
   _isValid(item, rule, value) {
     const label = item.label || item.name;
 
-    // Check if rule exists
-    // eslint-disable-next-line no-magic-numbers
-    if (rules.list.indexOf(rule.name) !== -1) {
-      // Do rule validation
-      if (rules[rule.name](value, rule, item)) {
-        // Then, create error if invalid
-        this._createError(item, rule, label);
-      }
+    // Do rule validation
+    if (rules[rule.name](value, rule, item)) {
+      // Then, create error if invalid
+      this._createError(item, rule, label);
     }
   }
 
@@ -214,37 +210,34 @@ export class Validate {
 
   _createError(item, rule, label) {
     const { name } = rule;
-    let val;
+    let val1;
+    let val2 = '';
 
     switch (name) {
       case 'min':
       case 'max':
       case 'minlength':
       case 'maxlength':
-        val = rule.value;
+        val1 = rule.value;
         break;
 
       case 'minmax':
-        val = [
-          getRuleByName(item, 'min').value,
-          getRuleByName(item, 'max').value,
-        ];
+        val1 = getRuleByName(item, 'min').value;
+        val2 = getRuleByName(item, 'max').value;
         break;
 
       case 'minmaxlength':
-        val = [
-          getRuleByName(item, 'minlength').value,
-          getRuleByName(item, 'maxlength').value,
-        ];
+        val1 = getRuleByName(item, 'minlength').value;
+        val2 = getRuleByName(item, 'maxlength').value;
         break;
 
       default:
-        val = [];
+        val1 = '';
     }
 
     this._addError(
       item,
-      this._messenger.getError(name, label, val)
+      this._messenger.getError(name, label, val1, val2)
     );
   }
 

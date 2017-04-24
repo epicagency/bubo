@@ -1,15 +1,3 @@
-export const list = [
-  'email',
-  'url',
-  'number',
-  'min',
-  'max',
-  'minmax',
-  'minlength',
-  'maxlength',
-  'minmaxlength',
-];
-
 export { default as email } from './email';
 export { default as url } from './url';
 export { default as number } from './number';
