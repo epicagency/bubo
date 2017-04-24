@@ -33,7 +33,7 @@ test('Default error messages', (t) => {
 
   t.regex(
     msg.getError('minmax', 'Test', 2, 3), // eslint-disable-line
-    /^Test.+2.+3.*/
+    /^Test.+2 and 3.*/
   );
 });
 
