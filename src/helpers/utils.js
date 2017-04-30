@@ -43,7 +43,7 @@ function hasRules(el) {
     'minlength',
     'max',
     'maxlength',
-    // 'pattern',
+    'pattern',
     // 'step',
   ];
 
@@ -53,6 +53,14 @@ function hasRules(el) {
 
       if (attr.includes('min') || attr.includes('max')) {
         val = parseInt(val, 10);
+      }
+
+      if (attr.includes('pattern')) {
+        try {
+          new RegExp(val); // eslint-disable-line no-new
+        } catch (e) {
+          throw new Error(`🦉 ${val} seems to be an invalid pattern!`);
+        }
       }
 
       rules.push(addRule(attr, val));

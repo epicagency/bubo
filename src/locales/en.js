@@ -17,6 +17,7 @@ const en = {
       minlength: '${label} should have, at least, ${value0} characters.',
       maxlength: '${label} should have, at most, ${value0} characters.',
       minmaxlength: '${label} should have between ${value0} and ${value1} characters.',
+      pattern: '${label} should match this regular expression ${value0}.',
     },
   },
 };

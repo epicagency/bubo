@@ -218,6 +218,7 @@ export class Validate {
       case 'max':
       case 'minlength':
       case 'maxlength':
+      case 'pattern':
         val1 = rule.value;
         break;
 

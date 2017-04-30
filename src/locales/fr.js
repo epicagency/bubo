@@ -17,6 +17,7 @@ const fr = {
       minlength: '${label} doit avoir au minimum ${value0} caractères.',
       maxlength: '${label} doit avoir au maximum ${value0} caractères.',
       minmaxlength: '${label} doit avoir entre ${value0} et ${value1} caractères.',
+      pattern: '${label} doit correspondre au motif ${value0}.',
     },
   },
 };

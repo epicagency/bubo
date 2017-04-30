@@ -289,3 +289,39 @@ test('Minlength + maxlength is valid', (t) => {
   bubo.validate();
   t.is(bubo.errors.wrong, undefined);
 });
+
+test('Pattern value is a valid pattern', (t) => {
+  const pattern = '^a[0-9{2}b$';
+  const item = createElement('input', {
+    name: 'test',
+    pattern,
+  });
+
+  t.context.form.appendChild(item);
+
+  const error = t.throws(() => {
+    new Validate(t.context.form); // eslint-disable-line
+  }, Error);
+
+  t.is(error.message, `🦉 ${pattern} seems to be an invalid pattern!`);
+});
+
+test('Pattern is valid', (t) => {
+  const pattern = '^a[0-9]{2}b$';
+  const item = createElement('input', {
+    name: 'test',
+    pattern,
+  });
+
+  t.context.form.appendChild(item);
+
+  const bubo = new Validate(t.context.form);
+
+  item.value = 'a11b';
+  bubo.validate();
+  t.is(bubo.errors.test, undefined);
+
+  item.value = 'a111b';
+  bubo.validate();
+  t.is(bubo.errors.test.length, 1);
+});

@@ -7,3 +7,4 @@ export { default as minmax } from './min-max';
 export { default as minlength } from './min-length';
 export { default as maxlength } from './max-length';
 export { default as minmaxlength } from './min-max-length';
+export { default as pattern } from './pattern';
