@@ -9,13 +9,13 @@ Form validation made simple (wip)
 
 ## Installation
 
-```js
+```sh
 npm i -S bubo
 ```
 
 ## Usage
 
-```
+```js
 import Bubo from 'bubo';
 
 const form = document.querySelector('.my-form');
@@ -53,7 +53,7 @@ You can access `status`, `text` and `errors` properties…
 #### `.reset()`
 
 Useful when the form content change.
-Re-initialiaze Bubo's validation rules.
+Re-initialize Bubo's validation rules.
 
 #### `.destroy()`
 
