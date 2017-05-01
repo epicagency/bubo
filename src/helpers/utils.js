@@ -15,24 +15,23 @@ function isRequired(el) {
  * @returns {Array|false} valid informations
  */
 function hasRules(el) {
+  const elType = el.getAttribute('type');
   const rules = [];
 
   // Based on type attribute
   const types = [
     // 'color',
-    // 'date',
+    'date',
     // 'datetime-local',
     'email',
     'number',
-    // 'tel',
+    'tel',
     // 'time',
     'url',
   ];
 
   types.forEach((type) => {
-    const typeValue = el.getAttribute('type');
-
-    if (type === typeValue) {
+    if (type === elType) {
       rules.push(addRule(type));
     }
   });
@@ -52,7 +51,12 @@ function hasRules(el) {
       let val = el.getAttribute(attr);
 
       if (attr.includes('min') || attr.includes('max')) {
-        val = parseInt(val, 10);
+        if (elType === 'number') {
+          val = parseFloat(val);
+        }
+        if (elType === 'date') {
+          val = new Date(val);
+        }
       }
 
       if (attr.includes('pattern')) {
@@ -153,14 +157,14 @@ export function shouldValidate(el) {
 
   // If something to validate
   // set others parameters
-  // and return Formy item
+  // and return Bubo item
   if (item.required || item.rules) {
     item.el = el;
     item.name = el.dataset.formName || el.getAttribute('name');
     item.label = el.dataset.formLabel || null;
     item.type = el.hasAttribute('type') ?
       el.getAttribute('type') :
-      'select';
+      el.nodeName.toLowerCase();
 
     return item;
   }

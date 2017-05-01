@@ -11,6 +11,7 @@ const fr = {
       email: '${label} n’est pas une adresse email valide.',
       url: '${label} n’est pas une URL valide.',
       number: '${label} doit être un nombre.',
+      date: '${label} doit être une date valide.',
       min: '${label} doit être inférieur ou égal à ${value0}.',
       max: '${label} doit être supérieur ou égal à ${value0}.',
       minmax: '${label} doit être compris entre ${value0} et ${value1}.',

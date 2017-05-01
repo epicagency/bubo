@@ -1,5 +1,5 @@
 import test from 'ava';
-import Validate from '../../src';
+import Bubo from '../../src';
 import { createElement } from '../helpers/create-element';
 
 test.beforeEach((t) => {
@@ -20,7 +20,7 @@ test('Validation on submit', (t) => {
   t.context.form.appendChild(item);
   t.context.form.appendChild(submit);
 
-  const bubo = new Validate(t.context.form);
+  const bubo = new Bubo(t.context.form);
 
   submit.click();
   t.is(bubo.errors.test.length, 1);

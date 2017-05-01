@@ -15,9 +15,9 @@ import {
  * Core class of Bubo
  *
  * @export
- * @class Validate
+ * @class Core
  */
-export class Validate {
+export class Core {
   constructor(form) {
     if (!(form instanceof window.HTMLFormElement)) {
       throw new Error('🦉 form parameter should be a HTMLFormElement!');
@@ -27,7 +27,6 @@ export class Validate {
     this._form = form;
 
     this._init();
-    this._bind();
   }
 
   /**
@@ -75,8 +74,7 @@ export class Validate {
     // Get all form elements
     const els = this._form.elements;
 
-    // !DEV
-    // empty form ?
+    // Empty form ?
     if (els.length === 0) {
       return;
     }
@@ -85,9 +83,25 @@ export class Validate {
     [...els].forEach((el) => {
       const item = shouldValidate(el);
 
+      if (!item) {
+        return;
+      }
+
       // There should be only one item by name for validation (e.g. radio group)
-      if (item && this._isUnique('name', item.name)) {
+      if (this._isUnique('name', item.name)) {
         this._items.push(item);
+      } else {
+        if (item.type !== 'radio') {
+          throw new Error(`🦉 Duplicate “${item.name}” name attribute!`);
+        }
+        // Set existing items to "group" type
+        this._items.map((i) => {
+          if (i.name === item.name) {
+            i.type = 'group';
+          }
+
+          return i;
+        });
       }
     });
   }
@@ -128,7 +142,7 @@ export class Validate {
       }
     });
 
-    if (Validate._hasErrors(this._results)) {
+    if (Core._hasErrors(this._results)) {
       this._results.status = 'error';
       this._results.text = this._messenger.getText(this._results.status);
     }
@@ -147,12 +161,12 @@ export class Validate {
   _isCompleted(item, value) {
     const label = item.label || item.name;
 
+
     if (item.type === 'checkbox' || item.type === 'radio') {
       if (!item.el.checked) {
         this._addError(
           item,
           this._messenger.getError('required', label)
-          // `${label} is required`
         );
       }
 
@@ -163,7 +177,6 @@ export class Validate {
       this._addError(
         item,
         this._messenger.getError('required', label)
-        // `${label} is required`
       );
     }
   }
@@ -260,46 +273,10 @@ export class Validate {
     }
   }
 
-  /**
-   * Bind events
-   *
-   * Available events:
-   *    submit
-   *
-   * @returns {undefined}
-   *
-   * @memberOf Validate
-   */
-  _bind() {
-    this.onSubmit = this._submit.bind(this);
-    this._form.addEventListener('submit', this.onSubmit);
-  }
-
-  /**
-   * Bind events
-   *
-   * Available events:
-   *    submit
-   *
-   * @returns {undefined}
-   *
-   * @memberOf Validate
-   */
-  _unbind() {
-    this._form.removeEventListener('submit', this.onSubmit);
-  }
-
-  _submit(e) {
-    e.preventDefault();
-    this.validate();
-    console.info(this.errors);
-  }
-
   destroy() {
-    this._unbind();
     delete this._items;
     delete this._results;
   }
 }
 
-export default Validate;
+export default Core;

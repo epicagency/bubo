@@ -1,3 +1,6 @@
+import isBefore from 'date-fns/is_before';
+import isAfter from 'date-fns/is_after';
+
 import {
   getRuleByName,
 } from '../helpers/utils';
@@ -12,19 +15,21 @@ import {
  * @returns {boolean} true if between or equal to min and max values
  */
 export default function isMinMax(value, rule, item) {
-  // !TODO add date-time cheks
-  // if (
-  //   item.type === 'number' ||
-  //   item.type === 'date' ||
-  //   item.type === 'time'
-  // ) {
+  const min = getRuleByName(item, 'min').value;
+  const max = getRuleByName(item, 'max').value;
+
   if (item.type === 'number') {
-    const min = parseFloat(getRuleByName(item, 'min').value);
-    const max = parseFloat(getRuleByName(item, 'max').value);
     const number = parseFloat(value);
 
     return number < min || number > max;
   }
+
+  if (item.type === 'date') {
+    const date = new Date(value);
+
+    return isBefore(date, min) || isAfter(date, max);
+  }
+  // !TODO add time cheks
 
   return false;
 }

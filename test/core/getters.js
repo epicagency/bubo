@@ -1,5 +1,5 @@
 import test from 'ava';
-import Validate from '../../src';
+import Bubo from '../../src';
 import { createElement } from '../helpers/create-element';
 
 test.beforeEach((t) => {
@@ -11,7 +11,7 @@ test('Getters are fine', (t) => {
 
   form.appendChild(createElement('input', { required: '' }));
 
-  const bubo = new Validate(t.context.form);
+  const bubo = new Bubo(t.context.form);
 
   t.is(bubo.errors, null);
   t.is(bubo.status, null);

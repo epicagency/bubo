@@ -16,7 +16,8 @@ export default function isMin(value, rule, item) {
     item.type === 'search' ||
     item.type === 'password' ||
     item.type === 'tel' ||
-    item.type === 'url'
+    item.type === 'url' ||
+    item.type === 'textarea'
   ) && !hasRule(item, 'minmaxlength')) {
     return value.length < rule.value;
   }

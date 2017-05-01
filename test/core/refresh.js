@@ -1,5 +1,5 @@
 import test from 'ava';
-import Validate from '../../src/index.js';
+import Bubo from '../../src/index.js';
 import { createElement } from '../helpers/create-element';
 
 test.beforeEach((t) => {
@@ -8,7 +8,7 @@ test.beforeEach((t) => {
 
 test('Bubo properly refreshed', (t) => {
   t.context.form.appendChild(createElement('input', { required: '' }));
-  const bubo = new Validate(t.context.form);
+  const bubo = new Bubo(t.context.form);
 
   t.is(bubo.items.length, 1);
 
