@@ -3,7 +3,7 @@
 ![stability-wip](https://img.shields.io/badge/stability-work_in_progress-lightgrey.svg?style=flat-square)
 [![Npm Version](https://img.shields.io/npm/v/bubo.svg?style=flat-square)](https://www.npmjs.com/package/bubo)
 [![Build Status](https://img.shields.io/travis/epicagency/bubo/master.svg?style=flat-square)](https://travis-ci.org/epicagency/bubo)
-[![Coverage Status](https://img.shields.io/coveralls/epicagency/bubo/master.svg?style=flat-square)](https://coveralls.io/github/epicagency/bubo?branch=master)
+[![Coverage Status](https://img.shields.io/coveralls/epicagency/bubo/master.svg?style=flat-square)](https://coveralls.io/github/epicagency/bubo?branch=master) [![Greenkeeper badge](https://badges.greenkeeper.io/epicagency/bubo.svg)](https://greenkeeper.io/)
 
 Form validation made simple (wip)
 
